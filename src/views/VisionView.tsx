@@ -1,6 +1,7 @@
 import React from 'react';
 import { useApp } from '../context/AppContext';
 import { COMPANY_INFO } from '../data/initialData';
+import { MEDIA_ASSETS } from '../assets/mediaAssets';
 import { Compass, Sparkles, Building2, Layers } from 'lucide-react';
 
 export const VisionView: React.FC = () => {
@@ -13,7 +14,7 @@ export const VisionView: React.FC = () => {
         <div className="bg-[#092744] text-white p-8 sm:p-14 lg:p-16 relative overflow-hidden shadow-md">
           <div className="absolute right-0 top-0 bottom-0 w-1/2 opacity-25 pointer-events-none hidden md:block">
             <img
-              src="/src/assets/images/hero_furniture_foam_1791093541655.jpg"
+              src={MEDIA_ASSETS.hero}
               alt="Visionary interiors"
               referrerPolicy="no-referrer"
               className="w-full h-full object-cover"

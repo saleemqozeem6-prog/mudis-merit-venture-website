@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useApp } from '../context/AppContext';
 import { COMPANY_INFO } from '../data/initialData';
+import { MEDIA_ASSETS, resolveImageUrl } from '../assets/mediaAssets';
 import { 
   X, 
   MessageCircle, 
@@ -20,9 +21,9 @@ import {
 } from 'lucide-react';
 
 const PRESET_IMAGES = [
-  { label: 'Living Room Sofa', url: '/src/assets/images/custom_sofa_living_1791093566797.jpg' },
-  { label: 'Foam & Mattress', url: '/src/assets/images/foam_mattress_craft_1791093554667.jpg' },
-  { label: 'Showroom Suite', url: '/src/assets/images/hero_furniture_foam_1791093541655.jpg' },
+  { label: 'Living Room Sofa', url: MEDIA_ASSETS.sofa },
+  { label: 'Foam & Mattress', url: MEDIA_ASSETS.foam },
+  { label: 'Showroom Suite', url: MEDIA_ASSETS.hero },
 ];
 
 export const ProductModal: React.FC = () => {
@@ -277,10 +278,10 @@ export const ProductModal: React.FC = () => {
               {/* Image Preview Box */}
               <div className="flex flex-col sm:flex-row gap-4 items-center">
                 <div className="w-36 h-28 bg-white border border-[#e5e8eb] overflow-hidden flex items-center justify-center shrink-0 relative">
-                  {editImage ? (
+                  {resolveImageUrl(editImage) ? (
                     <>
                       <img
-                        src={editImage}
+                        src={resolveImageUrl(editImage)}
                         alt="Preview"
                         referrerPolicy="no-referrer"
                         className="w-full h-full object-cover"
@@ -493,9 +494,9 @@ export const ProductModal: React.FC = () => {
           <div className="grid grid-cols-1 md:grid-cols-2">
             {/* Image Column */}
             <div className="relative bg-[#f6f7f8] min-h-[260px] md:min-h-[420px] flex items-center justify-center overflow-hidden">
-              {product.image ? (
+              {resolveImageUrl(product.image) ? (
                 <img
-                  src={product.image}
+                  src={resolveImageUrl(product.image)}
                   alt={product.name}
                   referrerPolicy="no-referrer"
                   className="w-full h-full object-cover object-center"

@@ -31,11 +31,12 @@ import {
   Hammer
 } from 'lucide-react';
 import firebaseConfig from '../../firebase-applet-config.json';
+import { MEDIA_ASSETS, resolveImageUrl } from '../assets/mediaAssets';
 
 const PRESET_IMAGES = [
-  { label: 'Living Room Sofa', url: '/src/assets/images/custom_sofa_living_1791093566797.jpg' },
-  { label: 'Foam & Mattress', url: '/src/assets/images/foam_mattress_craft_1791093554667.jpg' },
-  { label: 'Showroom Suite', url: '/src/assets/images/hero_furniture_foam_1791093541655.jpg' },
+  { label: 'Living Room Sofa', url: MEDIA_ASSETS.sofa },
+  { label: 'Foam & Mattress', url: MEDIA_ASSETS.foam },
+  { label: 'Showroom Suite', url: MEDIA_ASSETS.hero },
 ];
 
 export const AdminView: React.FC = () => {
@@ -612,7 +613,7 @@ export const AdminView: React.FC = () => {
 
                 <div className="flex flex-col sm:flex-row gap-4 items-center">
                   <div className="w-28 h-20 bg-white border border-[#e5e8eb] flex items-center justify-center shrink-0 overflow-hidden relative">
-                    {newProdImage ? (
+                    {newProdImage && newProdImage.trim() !== '' ? (
                       <img src={newProdImage} alt="New Preview" className="w-full h-full object-cover" />
                     ) : (
                       <span className="text-[10px] text-[#75808b]">No Image</span>
@@ -737,10 +738,10 @@ export const AdminView: React.FC = () => {
                         {/* Image Preview & Direct Delete Button */}
                         <td className="py-3 px-4 w-24">
                           <div className="w-16 h-14 bg-[#f6f7f8] border border-[#e5e8eb] overflow-hidden relative group shrink-0">
-                            {prod.image ? (
+                            {resolveImageUrl(prod.image) ? (
                               <>
                                 <img
-                                  src={prod.image}
+                                  src={resolveImageUrl(prod.image)}
                                   alt={prod.name}
                                   className="w-full h-full object-cover"
                                 />
@@ -1000,7 +1001,7 @@ export const AdminView: React.FC = () => {
 
                 <div className="flex flex-col sm:flex-row gap-4 items-center">
                   <div className="w-28 h-20 bg-white border border-[#e5e8eb] flex items-center justify-center shrink-0 overflow-hidden relative">
-                    {workshopImageUrl ? (
+                    {workshopImageUrl && workshopImageUrl.trim() !== '' ? (
                       <img src={workshopImageUrl} alt="Workshop Preview" className="w-full h-full object-cover" />
                     ) : (
                       <span className="text-[10px] text-[#75808b]">No Image</span>
@@ -1109,9 +1110,9 @@ export const AdminView: React.FC = () => {
                       className="bg-[#f6f7f8] border border-[#e5e8eb] overflow-hidden flex flex-col justify-between"
                     >
                       <div className="relative aspect-16/10 bg-neutral-900 overflow-hidden group">
-                        {item.imageUrl ? (
+                        {resolveImageUrl(item.imageUrl) ? (
                           <img
-                            src={item.imageUrl}
+                            src={resolveImageUrl(item.imageUrl)}
                             alt={item.title}
                             className="w-full h-full object-cover"
                           />
@@ -1522,8 +1523,8 @@ export const AdminView: React.FC = () => {
 
                 <div className="flex gap-4 items-center">
                   <div className="w-24 h-20 bg-white border border-[#e5e8eb] flex items-center justify-center shrink-0 overflow-hidden relative">
-                    {editProdImage ? (
-                      <img src={editProdImage} alt="Edit Preview" className="w-full h-full object-cover" />
+                    {resolveImageUrl(editProdImage) ? (
+                      <img src={resolveImageUrl(editProdImage)} alt="Edit Preview" className="w-full h-full object-cover" />
                     ) : (
                       <span className="text-[10px] text-[#75808b]">No Image</span>
                     )}

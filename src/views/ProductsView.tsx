@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react';
 import { useApp } from '../context/AppContext';
+import { resolveImageUrl } from '../assets/mediaAssets';
 import { Search, Scissors, MessageCircle, ArrowRight, ChevronRight } from 'lucide-react';
 
 export const ProductsView: React.FC = () => {
@@ -137,15 +138,22 @@ export const ProductsView: React.FC = () => {
                 onClick={() => setSelectedProductForModal(product)}
                 className="bg-white border border-[#e5e8eb] overflow-hidden shadow-xs hover:shadow-xl hover:-translate-y-1 transition-all cursor-pointer group flex flex-col justify-between"
               >
-                <div className="relative aspect-4/3 bg-[#f6f7f8] overflow-hidden">
-                  <img
-                    src={product.image}
-                    alt={product.name}
-                    referrerPolicy="no-referrer"
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                  />
+                <div className="relative aspect-4/3 bg-[#f6f7f8] overflow-hidden flex items-center justify-center">
+                  {resolveImageUrl(product.image) ? (
+                    <img
+                      src={resolveImageUrl(product.image)}
+                      alt={product.name}
+                      referrerPolicy="no-referrer"
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    />
+                  ) : (
+                    <div className="w-full h-full flex flex-col items-center justify-center text-[#75808b] p-4 bg-[#f0f4f8]">
+                      <span className="text-xs font-bold text-[#092744]">Mudis Merit</span>
+                      <span className="text-[10px] text-[#75808b]">No Image Available</span>
+                    </div>
+                  )}
                   <div className="absolute top-2.5 left-2.5 bg-[#092744] text-white text-[10px] font-bold px-2 py-0.5 uppercase tracking-wider">
-                    {product.subcategory}
+                    {product.subcategory || product.category}
                   </div>
                   {product.inStock ? (
                     <div className="absolute top-2.5 right-2.5 bg-[#159447] text-white text-[10px] font-bold px-2 py-0.5">

@@ -1,6 +1,7 @@
 import React from 'react';
 import { useApp } from '../context/AppContext';
 import { COMPANY_INFO } from '../data/initialData';
+import { MEDIA_ASSETS } from '../assets/mediaAssets';
 import { Target, CheckCircle2, MessageCircle, Phone, ArrowRight } from 'lucide-react';
 
 export const MissionView: React.FC = () => {
@@ -13,7 +14,7 @@ export const MissionView: React.FC = () => {
         <div className="bg-[#092744] text-white p-8 sm:p-14 lg:p-16 relative overflow-hidden shadow-md">
           <div className="absolute right-0 top-0 bottom-0 w-1/2 opacity-20 pointer-events-none hidden md:block">
             <img
-              src="/src/assets/images/workshop_carpentry_cutting_1791093578434.jpg"
+              src={MEDIA_ASSETS.workshop}
               alt="Artisanal craftsmanship"
               referrerPolicy="no-referrer"
               className="w-full h-full object-cover"

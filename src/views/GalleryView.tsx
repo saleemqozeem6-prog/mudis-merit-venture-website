@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useApp } from '../context/AppContext';
 import { GalleryItem } from '../types';
+import { MEDIA_ASSETS, resolveImageUrl } from '../assets/mediaAssets';
 import { 
   X, 
   MessageCircle, 
@@ -17,9 +18,9 @@ import {
 } from 'lucide-react';
 
 const PRESET_WORKSHOP_IMAGES = [
-  { label: 'Living Room Sofa Framing', url: '/src/assets/images/custom_sofa_living_1791093566797.jpg' },
-  { label: 'Foam Cutting & Mattress Craft', url: '/src/assets/images/foam_mattress_craft_1791093554667.jpg' },
-  { label: 'Showroom Suite Workshop', url: '/src/assets/images/hero_furniture_foam_1791093541655.jpg' },
+  { label: 'Living Room Sofa Framing', url: MEDIA_ASSETS.sofa },
+  { label: 'Foam Cutting & Mattress Craft', url: MEDIA_ASSETS.foam },
+  { label: 'Showroom Suite Workshop', url: MEDIA_ASSETS.hero },
 ];
 
 export const GalleryView: React.FC = () => {
@@ -233,9 +234,9 @@ export const GalleryView: React.FC = () => {
                     onClick={() => setActiveItem(item)}
                     className="relative aspect-4/3 overflow-hidden bg-neutral-900 cursor-pointer"
                   >
-                    {item.imageUrl ? (
+                    {resolveImageUrl(item.imageUrl) ? (
                       <img
-                        src={item.imageUrl}
+                        src={resolveImageUrl(item.imageUrl)}
                         alt={item.title}
                         referrerPolicy="no-referrer"
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
@@ -359,13 +360,17 @@ export const GalleryView: React.FC = () => {
                     className="w-full h-full object-contain"
                   />
                 )
-              ) : (
+              ) : resolveImageUrl(activeItem.imageUrl) ? (
                 <img
-                  src={activeItem.imageUrl}
+                  src={resolveImageUrl(activeItem.imageUrl)}
                   alt={activeItem.title}
                   referrerPolicy="no-referrer"
                   className="w-full h-full object-cover"
                 />
+              ) : (
+                <div className="w-full h-full flex items-center justify-center text-white/50 text-xs">
+                  No Image Available
+                </div>
               )}
             </div>
 
@@ -549,7 +554,7 @@ export const GalleryView: React.FC = () => {
 
                 <div className="flex gap-3 items-center">
                   <div className="w-20 h-16 bg-white border border-[#e5e8eb] shrink-0 overflow-hidden">
-                    {newImageUrl ? (
+                    {newImageUrl && newImageUrl.trim() !== '' ? (
                       <img src={newImageUrl} alt="Preview" className="w-full h-full object-cover" />
                     ) : (
                       <span className="text-[9px] text-[#75808b] flex items-center justify-center h-full">No Photo</span>

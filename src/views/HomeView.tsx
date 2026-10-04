@@ -1,6 +1,7 @@
 import React from 'react';
 import { useApp } from '../context/AppContext';
 import { COMPANY_INFO } from '../data/initialData';
+import { MEDIA_ASSETS, resolveImageUrl } from '../assets/mediaAssets';
 import { 
   ArrowRight, 
   Phone, 
@@ -39,7 +40,7 @@ export const HomeView: React.FC = () => {
         {/* Background Image with Rich Multi-stop Contrast Scrim */}
         <div className="hero-overlay absolute inset-0 z-0">
           <img
-            src="/src/assets/images/hero_furniture_foam_1791093541655.jpg"
+            src={MEDIA_ASSETS.hero}
             alt="Mudis Merit Venture foam and furniture Ibadan"
             referrerPolicy="no-referrer"
             className="w-full h-full object-cover object-center scale-[1.02] transition-transform duration-1000"
@@ -158,7 +159,7 @@ export const HomeView: React.FC = () => {
           {/* Image with label */}
           <div className="section-image furniture-image relative rounded-sm overflow-hidden">
             <img
-              src="/src/assets/images/custom_sofa_living_1791093566797.jpg"
+              src={MEDIA_ASSETS.sofa}
               alt="Mudis Merit Venture Furniture"
               referrerPolicy="no-referrer"
               className="w-full h-full object-cover min-h-[420px]"
@@ -287,7 +288,7 @@ export const HomeView: React.FC = () => {
               className="category-card foam-card cursor-pointer group"
             >
               <img
-                src="/src/assets/images/foam_mattress_craft_1791093554667.jpg"
+                src={MEDIA_ASSETS.foam}
                 alt="Foam Products"
                 referrerPolicy="no-referrer"
                 className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
@@ -320,7 +321,7 @@ export const HomeView: React.FC = () => {
               className="category-card furniture-card cursor-pointer group"
             >
               <img
-                src="/src/assets/images/hero_furniture_foam_1791093541655.jpg"
+                src={MEDIA_ASSETS.hero}
                 alt="Furniture"
                 referrerPolicy="no-referrer"
                 className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
@@ -441,31 +442,34 @@ export const HomeView: React.FC = () => {
           </div>
 
           <div className="gallery-grid" id="galleryPreview">
-            {gallery.slice(0, 3).map((item) => (
-              <div
-                key={item.id}
-                onClick={() => setCurrentView('gallery')}
-                className="group relative rounded-sm overflow-hidden bg-[#f6f7f8] min-h-[260px] cursor-pointer shadow-xs"
-              >
-                <img
-                  src={item.imageUrl}
-                  alt={item.title}
-                  referrerPolicy="no-referrer"
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 min-h-[260px]"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#092744]/90 via-[#092744]/30 to-transparent opacity-85 group-hover:opacity-95 transition-opacity flex flex-col justify-end p-5 text-white">
-                  <span className="text-[10px] text-[#f5b82e] font-bold uppercase tracking-wider mb-1">
-                    {item.category}
-                  </span>
-                  <h4 className="text-[16px] font-bold leading-snug">
-                    {item.title}
-                  </h4>
-                  <p className="text-xs text-white/70 mt-1 line-clamp-1">
-                    {item.caption}
-                  </p>
+            {gallery.slice(0, 3).map((item) => {
+              const displayUrl = resolveImageUrl(item.imageUrl) || MEDIA_ASSETS.sofa;
+              return (
+                <div
+                  key={item.id}
+                  onClick={() => setCurrentView('gallery')}
+                  className="group relative rounded-sm overflow-hidden bg-[#f6f7f8] min-h-[260px] cursor-pointer shadow-xs"
+                >
+                  <img
+                    src={displayUrl}
+                    alt={item.title}
+                    referrerPolicy="no-referrer"
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 min-h-[260px]"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#092744]/90 via-[#092744]/30 to-transparent opacity-85 group-hover:opacity-95 transition-opacity flex flex-col justify-end p-5 text-white">
+                    <span className="text-[10px] text-[#f5b82e] font-bold uppercase tracking-wider mb-1">
+                      {item.category}
+                    </span>
+                    <h4 className="text-[16px] font-bold leading-snug">
+                      {item.title}
+                    </h4>
+                    <p className="text-xs text-white/70 mt-1 line-clamp-1">
+                      {item.caption}
+                    </p>
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </section>
