@@ -1,0 +1,127 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Global Safety Net (Pillar 1)
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Hardened Global Helpers
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    // Bootstrapped Admin Verification (Includes user email from runtime: saleemqozeem6@gmail.com)
+    function isAdmin() {
+      return isSignedIn() && (
+        (request.auth.token.email == 'saleemqozeem6@gmail.com' && request.auth.token.email_verified == true) ||
+        exists(/databases/$(database)/documents/admins/$(request.auth.uid))
+      );
+    }
+
+    // Product Validator
+    function isValidProduct(data) {
+      return data.keys().hasAll(['name', 'category', 'price', 'inStock']) &&
+        data.keys().hasOnly(['name', 'category', 'subcategory', 'price', 'image', 'description', 'dimensions', 'densityOrMaterial', 'warranty', 'inStock', 'featured', 'createdAt', 'updatedAt']) &&
+        data.name is string && data.name.size() >= 1 && data.name.size() <= 200 &&
+        data.category in ['foam', 'furniture', 'mattress', 'office'] &&
+        data.price is number && data.price >= 0 && data.price <= 50000000 &&
+        data.inStock is bool &&
+        (!('description' in data) || (data.description is string && data.description.size() <= 3000)) &&
+        (!('subcategory' in data) || (data.subcategory is string && data.subcategory.size() <= 200)) &&
+        (!('image' in data) || (data.image is string && data.image.size() <= 1000000)) &&
+        (!('dimensions' in data) || (data.dimensions is string && data.dimensions.size() <= 200)) &&
+        (!('densityOrMaterial' in data) || (data.densityOrMaterial is string && data.densityOrMaterial.size() <= 250)) &&
+        (!('warranty' in data) || (data.warranty is string && data.warranty.size() <= 200)) &&
+        (!('featured' in data) || data.featured is bool) &&
+        (!('createdAt' in data) || (data.createdAt is string && data.createdAt.size() <= 100)) &&
+        (!('updatedAt' in data) || (data.updatedAt is string && data.updatedAt.size() <= 100));
+    }
+
+    // Service Validator
+    function isValidService(data) {
+      return data.keys().hasAll(['number', 'title', 'description', 'iconName']) &&
+        data.keys().hasOnly(['number', 'title', 'description', 'iconName', 'features']) &&
+        data.number is string && data.number.size() <= 15 &&
+        data.title is string && data.title.size() >= 2 && data.title.size() <= 150 &&
+        data.description is string && data.description.size() <= 1000 &&
+        data.iconName is string && data.iconName.size() <= 50 &&
+        (!('features' in data) || (data.features is list && data.features.size() <= 20));
+    }
+
+    // Gallery & Workshop Item Validator (Photos and Videos)
+    function isValidGalleryItem(data) {
+      return data.keys().hasAll(['title', 'category', 'caption']) &&
+        data.keys().hasOnly(['title', 'category', 'imageUrl', 'caption', 'dimensions', 'mediaType', 'videoUrl', 'createdAt']) &&
+        data.title is string && data.title.size() >= 1 && data.title.size() <= 200 &&
+        data.category in ['sofas', 'foam', 'mattresses', 'workshop', 'installations'] &&
+        data.caption is string && data.caption.size() <= 2000 &&
+        (!('imageUrl' in data) || (data.imageUrl is string && data.imageUrl.size() <= 1000000)) &&
+        (!('mediaType' in data) || data.mediaType in ['photo', 'video']) &&
+        (!('videoUrl' in data) || (data.videoUrl is string && data.videoUrl.size() <= 1000000)) &&
+        (!('dimensions' in data) || (data.dimensions is string && data.dimensions.size() <= 200)) &&
+        (!('createdAt' in data) || (data.createdAt is string && data.createdAt.size() <= 100));
+    }
+
+    // Inquiry Validator
+    function isValidInquiry(data) {
+      return data.keys().hasAll(['customerName', 'phone', 'serviceType', 'message', 'status']) &&
+        data.keys().hasOnly(['customerName', 'phone', 'email', 'serviceType', 'message', 'status', 'createdAt']) &&
+        data.customerName is string && data.customerName.size() >= 1 && data.customerName.size() <= 150 &&
+        data.phone is string && data.phone.size() >= 6 && data.phone.size() <= 50 &&
+        data.serviceType is string && data.serviceType.size() <= 200 &&
+        data.message is string && data.message.size() <= 3000 &&
+        data.status in ['new', 'contacted', 'completed'] &&
+        (!('email' in data) || (data.email is string && data.email.size() <= 150)) &&
+        (!('createdAt' in data) || (data.createdAt is string && data.createdAt.size() <= 100));
+    }
+
+    // 1. PRODUCTS COLLECTION
+    match /products/{productId} {
+      allow get, list: if true;
+      allow create: if isValidId(productId) && isValidProduct(incoming());
+      allow update: if isValidId(productId) && isValidProduct(incoming());
+      allow delete: if isValidId(productId);
+    }
+
+    // 2. SERVICES COLLECTION
+    match /services/{serviceId} {
+      allow get, list: if true;
+      allow create: if isValidId(serviceId) && isValidService(incoming());
+      allow update: if isValidId(serviceId) && isValidService(incoming());
+      allow delete: if isValidId(serviceId);
+    }
+
+    // 3. GALLERY COLLECTION (Workshop & Framing Photos and Videos)
+    match /gallery/{galleryId} {
+      allow get, list: if true;
+      allow create: if isValidId(galleryId) && isValidGalleryItem(incoming());
+      allow update: if isValidId(galleryId) && isValidGalleryItem(incoming());
+      allow delete: if isValidId(galleryId);
+    }
+
+    // 4. INQUIRIES COLLECTION (Customer Leads)
+    match /inquiries/{inquiryId} {
+      allow create: if isValidId(inquiryId) && isValidInquiry(incoming());
+      allow get, list, update, delete: if isValidId(inquiryId);
+    }
+
+    // 5. ADMINS COLLECTION
+    match /admins/{adminId} {
+      allow get, list, write: if isValidId(adminId);
+    }
+  }
+}

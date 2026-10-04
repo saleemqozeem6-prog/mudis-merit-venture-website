@@ -1,0 +1,257 @@
+{
+  "entities": {
+    "Product": {
+      "title": "Product",
+      "description": "Furniture or foam mattress product in the Mudis Merit Venture catalog",
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Product display name",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "category": {
+          "type": "string",
+          "description": "Primary department category",
+          "enum": ["foam", "furniture", "mattress", "office"]
+        },
+        "subcategory": {
+          "type": "string",
+          "description": "Specific subcategory line",
+          "maxLength": 200
+        },
+        "price": {
+          "type": "number",
+          "description": "Price in Nigerian Naira (NGN)"
+        },
+        "image": {
+          "type": "string",
+          "description": "URL path or data URI to product photo",
+          "maxLength": 1000000
+        },
+        "description": {
+          "type": "string",
+          "description": "Detailed materials and dimensions description",
+          "maxLength": 3000
+        },
+        "dimensions": {
+          "type": "string",
+          "description": "Item size in feet or inches",
+          "maxLength": 200
+        },
+        "densityOrMaterial": {
+          "type": "string",
+          "description": "Foam density grade or wood species",
+          "maxLength": 250
+        },
+        "warranty": {
+          "type": "string",
+          "description": "Guarantee duration",
+          "maxLength": 200
+        },
+        "inStock": {
+          "type": "boolean",
+          "description": "Availability flag"
+        },
+        "featured": {
+          "type": "boolean",
+          "description": "Frontpage featured showcase flag"
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "ISO creation timestamp",
+          "maxLength": 100
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "ISO update timestamp",
+          "maxLength": 100
+        }
+      },
+      "required": ["name", "category", "price", "inStock"]
+    },
+    "Service": {
+      "title": "Service",
+      "description": "Craftsmanship or custom sizing service offered at the Ojoo workshop",
+      "type": "object",
+      "properties": {
+        "number": {
+          "type": "string",
+          "description": "Service index numbering like 01, 02",
+          "maxLength": 15
+        },
+        "title": {
+          "type": "string",
+          "description": "Service title",
+          "minLength": 2,
+          "maxLength": 150
+        },
+        "description": {
+          "type": "string",
+          "description": "Summary of service offering",
+          "maxLength": 1000
+        },
+        "iconName": {
+          "type": "string",
+          "description": "Visual icon identifier",
+          "maxLength": 50
+        },
+        "features": {
+          "type": "array",
+          "description": "List of bullet features"
+        }
+      },
+      "required": ["number", "title", "description", "iconName"]
+    },
+    "GalleryItem": {
+      "title": "GalleryItem",
+      "description": "Showroom and workshop photography or video demonstrating framing and craftsmanship",
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string",
+          "description": "Title of work piece or workshop video",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "category": {
+          "type": "string",
+          "description": "Gallery categorization",
+          "enum": ["sofas", "foam", "mattresses", "workshop", "installations"]
+        },
+        "imageUrl": {
+          "type": "string",
+          "description": "Cover photo or preview URL",
+          "maxLength": 1000000
+        },
+        "caption": {
+          "type": "string",
+          "description": "Project details or video description",
+          "maxLength": 2000
+        },
+        "dimensions": {
+          "type": "string",
+          "description": "Optional timber or sizing specifications",
+          "maxLength": 200
+        },
+        "mediaType": {
+          "type": "string",
+          "description": "Type of media asset",
+          "enum": ["photo", "video"]
+        },
+        "videoUrl": {
+          "type": "string",
+          "description": "Video stream or embed URL",
+          "maxLength": 1000000
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Creation timestamp",
+          "maxLength": 100
+        }
+      },
+      "required": ["title", "category", "caption"]
+    },
+    "Inquiry": {
+      "title": "Inquiry",
+      "description": "Customer quote request or foam cutting calculation lead",
+      "type": "object",
+      "properties": {
+        "customerName": {
+          "type": "string",
+          "description": "Full name of inquiring customer",
+          "minLength": 1,
+          "maxLength": 150
+        },
+        "phone": {
+          "type": "string",
+          "description": "Phone or WhatsApp contact number",
+          "minLength": 6,
+          "maxLength": 50
+        },
+        "email": {
+          "type": "string",
+          "description": "Optional email address",
+          "maxLength": 150
+        },
+        "serviceType": {
+          "type": "string",
+          "description": "Subject of interest or calculator cut spec",
+          "maxLength": 200
+        },
+        "message": {
+          "type": "string",
+          "description": "Custom requirement message or calculated specs",
+          "maxLength": 3000
+        },
+        "status": {
+          "type": "string",
+          "description": "Lead processing status",
+          "enum": ["new", "contacted", "completed"]
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Timestamp string",
+          "maxLength": 100
+        }
+      },
+      "required": ["customerName", "phone", "serviceType", "message", "status"]
+    },
+    "Admin": {
+      "title": "Admin",
+      "description": "Authorized administrator profile for Mudis Merit Venture dashboard",
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string",
+          "description": "Administrator email address",
+          "maxLength": 120
+        },
+        "role": {
+          "type": "string",
+          "description": "System role",
+          "enum": ["admin", "superadmin"]
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Registration timestamp",
+          "maxLength": 50
+        }
+      },
+      "required": ["email", "role"]
+    }
+  },
+  "firestore": {
+    "/products/{productId}": {
+      "schema": {
+        "$ref": "#/entities/Product"
+      },
+      "description": "Public catalog of foam mattresses, cushions, and bespoke furniture"
+    },
+    "/services/{serviceId}": {
+      "schema": {
+        "$ref": "#/entities/Service"
+      },
+      "description": "Company services displayed across website and editable from admin dashboard"
+    },
+    "/gallery/{galleryId}": {
+      "schema": {
+        "$ref": "#/entities/GalleryItem"
+      },
+      "description": "Showroom, workshop & framing photos and videos"
+    },
+    "/inquiries/{inquiryId}": {
+      "schema": {
+        "$ref": "#/entities/Inquiry"
+      },
+      "description": "Customer inquiries and foam calculation quotes submitted via contact form or calculator"
+    },
+    "/admins/{adminId}": {
+      "schema": {
+        "$ref": "#/entities/Admin"
+      },
+      "description": "Authorized administrator user records"
+    }
+  }
+}
